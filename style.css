@@ -1,0 +1,101 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    font-family: sans-serif;
+}
+
+
+div#header {
+    box-sizing: border-box;
+    background-color: purple;
+    height: 50px;
+    padding: 10px;
+}
+div#header h1 {
+    color: white;
+}
+
+
+div#chatlist {
+    box-sizing: border-box;
+    float: left;
+    border-right: 1px solid black;
+    width: 30%;
+    height: calc(100vh - 50px);
+}
+div#chatlist div.chat {
+    border-bottom: 1px solid black;
+    width: 100%;
+    height: 15vh;
+}
+div#chatlist div.chat div.profile_picture {
+    float: left;
+    background-image: url("profile_pic.png");
+    background-size: cover;
+    border-radius: 50%;
+    height: 15vh;
+    width: 15vh;
+}
+
+
+div#conversation {
+    box-sizing: border-box;
+    float: right;
+    width: 70%;
+    height: calc(100vh - 50px);
+}
+div#current_user {
+    box-sizing: border-box;
+    border-bottom: 1px solid black;
+    height: 10%;
+}
+div#conversation div#messages {
+    width: 100%;
+    height: 60%;
+}
+div#conversation div#messages div.message_container {
+    width: 100%;
+}
+div#conversation div#messages div.message_container.sent {
+    text-align: right;
+}
+div#conversation div#messages div.message_container.received {
+    text-align: left;
+}
+div#conversation div#messages div.message_container p.message {
+    display: inline-block;
+    background-color: purple;
+    border-radius: 5px;
+    max-width: 60%;
+    margin: 2px 5px;
+    padding: 5px;
+    color: white;
+}
+div#conversation div#type_message {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: flex-start;
+    height: 30%;
+}
+div#conversation div#type_message textarea {
+    resize: none;
+    box-sizing: border-box;
+    border-radius: 10px;
+    height: 80%;
+    width: 50%;
+    padding: 5px;
+}
+div#conversation div#type_message div#send_button {
+    display: inline-block;
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: purple;
+    padding: 5px;
+    margin: 0px 5px 5px 5px;
+}
+div#conversation div#type_message div#send_button p {
+    display: inline-block;
+    color: white;
+}
