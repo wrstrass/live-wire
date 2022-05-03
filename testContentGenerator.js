@@ -54,9 +54,67 @@ let data = [
         ]
     }
 ];
-console.log(data);
+
+let allChats = new Map();
+let currentOpenedChat = undefined;
+function setCurrentChat (user) {
+    if (user == currentOpenedChat) return;
+
+    if (currentOpenedChat != undefined) {
+        currentOpenedChat.chat.deactivate();
+        currentOpenedChat.conversation.hide();
+    }
+
+    if (user != undefined) {
+        user.chat.activate();
+        user.conversation.show();
+    }
+
+    currentOpenedChat = user;
+}
+
+function ChatWithUser (obj) {
+    this.data = obj;
+
+    this.chat = {
+        htmlBlock: createChat({
+            username: obj.username,
+            profilePic: obj.profilePicture,
+            lastMessage: obj.messages[obj.messages.length - 1].text
+        }),
+        activate: function () {
+            this.htmlBlock.style.backgroundColor = "rgba(255, 0, 0, 1)";
+        },
+        deactivate: function () {
+            this.htmlBlock.style.backgroundColor = "";
+        }
+    };
+    document.getElementById("chatlist").appendChild(this.chat.htmlBlock);
+
+    this.conversation = {
+        htmlBlock: createConversation(obj),
+        show: function () {
+            document.body.appendChild(this.htmlBlock);
+        },
+        hide: function () {
+            document.body.removeChild(this.htmlBlock);
+        }
+    };
+
+    this.chat.htmlBlock.onclick = () => {
+        setCurrentChat(this);
+    };
+}
 
 window.onload = function () {
+    data.forEach((obj) => {
+        allChats.set(obj.username, new ChatWithUser(obj));
+    });
+
+    window.onkeydown = (ev) => {
+        if (ev.key == "Escape") setCurrentChat();
+    };
+    /*
     var messages = document.getElementById("messages");
 
     var longText = "Text";
@@ -76,9 +134,30 @@ window.onload = function () {
             username: "user" + i,
             lastMessage: "Message text"
         }));
+    */
 }
 
-function generateMessage (sent, text) {
+function createConversation (user) {
+    let conversation = document.createElement("div");
+    conversation.id = "conversation";
+
+    let messages = document.createElement("div");
+    messages.id = "messages";
+    user.messages.forEach((msg) => {
+        messages.appendChild(createMessage(msg.sent, msg.text));
+    });
+
+    conversation.appendChild(messages);
+    conversation.innerHTML = 
+        "<div id=\"current_user\"><h2>" + user.username + "</h2></div>"
+        + conversation.innerHTML +
+        "<div id=\"type_message\"><textarea name=\"\" id=\"\" cols=\"30\" rows=\"10\"></textarea>" +
+        "<div id=\"send_button\"><p>Send</p></div></div>";
+
+    return conversation;
+}
+
+function createMessage (sent, text) {
     var msg = document.createElement("div");
     msg.classList.add("message_container");
     if (sent)
@@ -90,7 +169,7 @@ function generateMessage (sent, text) {
     return msg;
 }
 
-function createUser (user) {
+function createChat (user) {
     let userChat = document.createElement("div");
     userChat.classList.add("chat");
 
