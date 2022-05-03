@@ -1,5 +1,13 @@
 extends layout
 
+block headContent
+  link(rel="stylesheet", href="stylesheets/style.css")
+  script(src="javascripts/script.js")
+  title LiveWire
+
 block content
-  h1= title
-  p Welcome to #{title}
+  #header
+    h1 LIVEWIRE
+  #chatlist
+  //h1= title
+  //p Welcome to #{title}
