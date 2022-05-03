@@ -1,59 +1,4 @@
-let data = [
-    {
-        "username": "First User",
-        "profilePicture": "profile_pic.png",
-        "messages": [
-            {
-                "sent": true,
-                "text": "1st message"
-            },
-            {
-                "sent": true,
-                "text": "2nd message"
-            },
-            {
-                "sent": false,
-                "text": "3rd message"
-            }
-        ]
-    },
-    {
-        "username": "Second User",
-        "profilePicture": "profile_pic.png",
-        "messages": [
-            {
-                "sent": true,
-                "text": "4th message"
-            },
-            {
-                "sent": false,
-                "text": "5th message"
-            },
-            {
-                "sent": false,
-                "text": "6th message"
-            }
-        ]
-    },
-    {
-        "username": "Third User",
-        "profilePicture": "profile_pic.png",
-        "messages": [
-            {
-                "sent": true,
-                "text": "7th message"
-            },
-            {
-                "sent": false,
-                "text": "8th message"
-            },
-            {
-                "sent": true,
-                "text": "9th message"
-            }
-        ]
-    }
-];
+let data;
 
 let allChats = new Map();
 let currentOpenedChat = undefined;
@@ -107,8 +52,13 @@ function ChatWithUser (obj) {
 }
 
 window.onload = function () {
-    data.forEach((obj) => {
-        allChats.set(obj.username, new ChatWithUser(obj));
+    fetch("/data").then((res) => {
+        return res.json();
+    }).then((_data) => {
+        data = _data;
+        data.forEach((obj) => {
+            allChats.set(obj.username, new ChatWithUser(obj));
+        });
     });
 
     window.onkeydown = (ev) => {
