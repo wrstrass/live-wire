@@ -165,8 +165,22 @@ function createUserInUserList (username) {
     result.innerHTML = "<h2>" + username + "</h2><h2 class=\"plus\">+</h2>";
 
     result.getElementsByClassName("plus")[0].onclick = function() {
-        console.log(username);
+        sendMessage(username, "Hi!");
     }
 
     return result;
+}
+
+
+function sendMessage (toWhom, message) {
+    fetch("/sendMessage", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            receiver: toWhom,
+            msg: message
+        })
+    });
 }

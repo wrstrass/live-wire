@@ -14,17 +14,71 @@ router.get("/data", function (req, res, next) {
 });
 
 router.get("/users", function (req, res, next) {
-    http.get("http://" + config.server + "/users", (response) => {
-        let httpPromise = makeHttpRequestPromise(response);
-        httpPromise.then((data) => {
-            res.json(data);
+    httpGETRequest("http://" + config.server + "/users").then((data) => {
+        res.json(data);
+    });
+});
+
+router.post("/sendMessage", function (req, res, next) {
+    httpGETRequest("http://" + config.server + "/check?username=" + req.body.receiver).then((data) => {
+        httpPOSTJSONRequest("http://" + JSON.parse(data).ip + "/receiveMessage", {
+            message: req.body.msg
         });
     });
 });
 
+router.post("/receiveMessage", function (req, res, next) {
+    console.log(req.body);
+});
+
 module.exports = router;
 
-function makeHttpRequestPromise (response) {
+
+function httpGETRequest (url) {
+    return new Promise((resolve, reject) => {
+        http.get(url, (response) => {
+            httpResponseCombineData(response).then((data) => {
+                resolve(data);
+            });
+        })
+    });
+}
+
+function httpPOSTJSONRequest (url, data) {
+    url = new URL(url);
+    data = JSON.stringify(data);
+
+    let options = {
+        hostname: url.hostname,
+        port: url.port,
+        path: url.pathname,
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Content-Length": data.length
+        }
+    };
+
+    return httpRequest(options, data);
+}
+
+function httpRequest (options, data) {
+    return new Promise((resolve, reject) => {
+        let req = http.request(options, (response) => {
+            httpResponseCombineData(response).then((data) => {
+                resolve(data);
+            });
+        });
+
+        req.on("error", (error) => {
+            console.log(error);
+        });
+        req.write(data);
+        req.end();
+    });
+}
+
+function httpResponseCombineData (response) {
     return new Promise((resolve, reject) => {
         let str = "";
 
