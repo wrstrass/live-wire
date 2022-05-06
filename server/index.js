@@ -13,6 +13,9 @@ const host = config.host;
 const port = config.port;
 
 const requestEmitter = new EventEmitter();
+requestEmitter.on("GET/", (req, res, url) => {
+    res.end("Live Wire Server");
+});
 requestEmitter.on("GET/register", (req, res, url) => {
     if (users[url.searchParams.get("username")] == url.searchParams.get("password")) {
         data[url.searchParams.get("username")] = {

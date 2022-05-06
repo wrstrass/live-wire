@@ -1,5 +1,16 @@
 let data;
 
+/*
+let config;
+fetch("/config").then((res) => {
+    return res.json();
+}).then((data) => {
+    config = data;
+
+    return fetch("http://" + config.server);    
+});
+*/
+
 let allChats = new Map();
 let currentOpenedChat = undefined;
 function setCurrentChat (user) {
@@ -63,6 +74,14 @@ window.onload = function () {
 
     window.onkeydown = (ev) => {
         if (ev.key == "Escape") setCurrentChat();
+        
+        if (ev.key == "Control") {
+            fetch("/users").then((res) => {
+                return res.json();
+            }).then((data) => {
+                console.log(data);
+            });
+        }
     };
     /*
     var messages = document.getElementById("messages");
