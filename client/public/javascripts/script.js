@@ -72,38 +72,36 @@ window.onload = function () {
         });
     });
 
+    let makeUsersRequest = true;
+
     window.onkeydown = (ev) => {
         if (ev.key == "Escape") setCurrentChat();
         
         if (ev.key == "Control") {
-            fetch("/users").then((res) => {
-                return res.json();
-            }).then((data) => {
-                console.log(data);
-            });
+            if (makeUsersRequest) {
+                makeUsersRequest = false;
+
+                fetch("/users").then((res) => {
+                    return res.json();
+                }).then((data) => {
+                    data = JSON.parse(data);
+                    document.getElementById("blurWindow").style.display = "block";
+                    document.getElementById("usersList").innerHTML = "";
+
+                    data.forEach((username) => {
+                        document.getElementById("usersList").appendChild(createUserInUserList(username));
+                    })
+                });
+            }
         }
     };
-    /*
-    var messages = document.getElementById("messages");
 
-    var longText = "Text";
-    for (var i = 0; i < 50; i++)
-        longText += " text";
-
-    messages.appendChild(generateMessage(true, longText));
-    messages.appendChild(generateMessage(false, longText));
-    messages.appendChild(generateMessage(false, longText));
-    for (let i = 0; i < 17; i++)
-        messages.appendChild(generateMessage(true, String(i) + "msg"));
-
-    var chatList = document.getElementById("chatlist");
-    for (let i = 0; i < 14; i++)
-        chatList.appendChild(createUser({
-            profilePic: "profile_pic.png",
-            username: "user" + i,
-            lastMessage: "Message text"
-        }));
-    */
+    window.onkeyup = (ev) => {
+        if (ev.key == "Control") {
+            document.getElementById("blurWindow").style.display = "none";
+            makeUsersRequest = true;
+        }
+    }
 }
 
 function createConversation (user) {
@@ -158,4 +156,17 @@ function createChat (user) {
     userChat.appendChild(lastMessage);
 
     return userChat;
+}
+
+
+function createUserInUserList (username) {
+    let result = document.createElement("div");
+    result.classList.add("user");
+    result.innerHTML = "<h2>" + username + "</h2><h2 class=\"plus\">+</h2>";
+
+    result.getElementsByClassName("plus")[0].onclick = function() {
+        console.log(username);
+    }
+
+    return result;
 }

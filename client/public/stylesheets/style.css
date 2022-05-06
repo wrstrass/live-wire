@@ -101,3 +101,32 @@ div#conversation div#type_message div#send_button p {
     display: inline-block;
     color: white;
 }
+
+
+div#blurWindow {
+    display: none;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.75);
+}
+
+div#blurWindow div#usersList {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40vw;
+    height: 50vh;
+    padding: 5px;
+    background-color: grey;
+}
+div#blurWindow div#usersList div.user h2 {
+    display: inline-block;
+}
+div#blurWindow div#usersList div.user h2.plus {
+    cursor: pointer;
+    float: right;
+}
