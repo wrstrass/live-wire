@@ -1,1 +1,1 @@
-{"smth_check":{"password":"12345678","ip":"localhost"}}
+{"user1":{"password":"1","ip":"localhost"},"user3":{"password":"3","ip":"localhost"}}
