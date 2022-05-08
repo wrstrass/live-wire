@@ -12,7 +12,7 @@ function saveData () {
 }
 
 
-let wsServer = new WebSocket.Server({port: 9000});
+let wsServer = new WebSocket.Server({port: config.webSocketPort});
 let mainWebSocketCliet;
 wsServer.on("connection", (wsClient) => {
     mainWebSocketCliet = wsClient;
@@ -24,8 +24,13 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+
 router.get("/data", function (req, res, next) {
     res.json(data);
+});
+
+router.get("/webSocketPort", function (req, res, next) {
+    res.json({ port: config.webSocketPort });
 });
 
 router.get("/username", function (req, res, next) {
@@ -37,6 +42,7 @@ router.get("/users", function (req, res, next) {
         res.json(data);
     });
 });
+
 
 router.post("/sendMessage", function (req, res, next) {
     httpGETRequest("http://" + config.server + "/check?username=" + req.body.receiver).then((data) => {

@@ -21,6 +21,7 @@ echo "{}" > server/data.json
 cd client1
 echo "[]" > data.json
 echo "{\"port\": 1111," > config.json
+echo "\"webSocketPort\": 9001," >> config.json
 echo "\"server\": \"localhost:8000\"," >> config.json
 echo "\"username\": \"user1\"}" >>config.json
 cd ..
@@ -35,6 +36,7 @@ cd ..
 cd client3
 echo "[]" > data.json
 echo "{\"port\": 3333," > config.json
+echo "\"webSocketPort\": 9003," >> config.json
 echo "\"server\": \"localhost:8000\"," >> config.json
 echo "\"username\": \"user3\"}" >>config.json
 cd ..

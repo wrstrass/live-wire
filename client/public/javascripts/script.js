@@ -63,22 +63,30 @@ function ChatWithUser (obj) {
     }
 }
 
-let socket = new WebSocket("ws://localhost:9000");
-socket.onopen = function (ev) {
-    console.log("WebSocket connected");
-}
-socket.onmessage = function (ev) {
-    let obj = JSON.parse(ev.data);
 
-    if (obj.type == "NewIncomingMessage") {
-        if (allChats.get(obj.message.sender) == undefined) {
-            alert("New Message Sender! Reload the page");
-        }
-        else {
-            allChats.get(obj.message.sender).addMessage(false, obj.message.message);
+let socket;
+fetch("/webSocketPort").then((res) => {
+    return res.json();
+}).then((port) => {
+    socket = new WebSocket("ws://localhost:" + port.port);
+
+    socket.onopen = function (ev) {
+        console.log("WebSocket connected on port " + port.port);
+    }
+    socket.onmessage = function (ev) {
+        let obj = JSON.parse(ev.data);
+    
+        if (obj.type == "NewIncomingMessage") {
+            if (allChats.get(obj.message.sender) == undefined) {
+                alert("New Message Sender! Reload the page");
+            }
+            else {
+                allChats.get(obj.message.sender).addMessage(false, obj.message.message);
+            }
         }
     }
-}
+});
+
 
 window.onload = function () {
     fetch("/data").then((res) => {

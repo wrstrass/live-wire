@@ -1,5 +1,6 @@
 {
     "port": 1111,
+    "webSocketPort": 9000,
     "server": "localhost:8000",
     "username": "user1"
 }
