@@ -1,16 +1,5 @@
 let data;
 
-/*
-let config;
-fetch("/config").then((res) => {
-    return res.json();
-}).then((data) => {
-    config = data;
-
-    return fetch("http://" + config.server);    
-});
-*/
-
 let allChats = new Map();
 let currentOpenedChat = undefined;
 function setCurrentChat (user) {
@@ -45,6 +34,9 @@ function ChatWithUser (obj) {
             this.htmlBlock.style.backgroundColor = "";
         }
     };
+    this.chat.htmlBlock.onclick = () => {
+        setCurrentChat(this);
+    };
     document.getElementById("chatlist").appendChild(this.chat.htmlBlock);
 
     this.conversation = {
@@ -54,12 +46,38 @@ function ChatWithUser (obj) {
         },
         hide: function () {
             document.body.removeChild(this.htmlBlock);
+        },
+
+        setParams: function () {
+            this.messages = this.htmlBlock.querySelector("#messages");
+            this.textarea = this.htmlBlock.querySelector("textarea");
+            this.sendButton = this.htmlBlock.querySelector("#send_button");
         }
     };
+    this.conversation.setParams();
+    this.addMessage = function (sent, text) {
+        this.conversation.messages.appendChild(createMessage(sent, text));
+    }
+    this.conversation.sendButton.onclick = () => {
+        sendMessage(this.data.username, this.conversation.textarea.value);
+    }
+}
 
-    this.chat.htmlBlock.onclick = () => {
-        setCurrentChat(this);
-    };
+let socket = new WebSocket("ws://localhost:9000");
+socket.onopen = function (ev) {
+    console.log("WebSocket connected");
+}
+socket.onmessage = function (ev) {
+    let obj = JSON.parse(ev.data);
+
+    if (obj.type == "NewIncomingMessage") {
+        if (allChats.get(obj.message.sender) == undefined) {
+            alert("New Message Sender! Reload the page");
+        }
+        else {
+            allChats.get(obj.message.sender).addMessage(false, obj.message.message);
+        }
+    }
 }
 
 window.onload = function () {

@@ -1,8 +1,23 @@
+const fs = require("fs");
 const http = require("http");
+const WebSocket = require("ws");
 var express = require('express');
 var router = express.Router();
 
 let config = require("../config.json");
+
+let data = require("../data.json");
+function saveData () {
+    fs.writeFileSync("./data.json", JSON.stringify(data));
+}
+
+
+let wsServer = new WebSocket.Server({port: 9000});
+let mainWebSocketCliet;
+wsServer.on("connection", (wsClient) => {
+    mainWebSocketCliet = wsClient;
+});
+
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -10,7 +25,11 @@ router.get('/', function(req, res, next) {
 });
 
 router.get("/data", function (req, res, next) {
-    res.json(require("./data.json"));
+    res.json(data);
+});
+
+router.get("/username", function (req, res, next) {
+    res.json({ username: config.username });
 });
 
 router.get("/users", function (req, res, next) {
@@ -21,14 +40,38 @@ router.get("/users", function (req, res, next) {
 
 router.post("/sendMessage", function (req, res, next) {
     httpGETRequest("http://" + config.server + "/check?username=" + req.body.receiver).then((data) => {
-        httpPOSTJSONRequest("http://" + JSON.parse(data).ip + "/receiveMessage", {
+        return httpPOSTJSONRequest("http://" + JSON.parse(data).ip + "/receiveMessage", {
+            sender: config.username,
             message: req.body.msg
         });
     });
 });
 
 router.post("/receiveMessage", function (req, res, next) {
-    console.log(req.body);
+    if (req.body.sender == config.username) return;
+
+    let i = 0;
+    for (i = 0; i < data.length; i++)
+        if (data[i].username == req.body.sender)
+            break;
+    if (i == data.length) {
+        data.push({
+            username: req.body.sender,
+            messages: []
+        });
+    }
+
+    data[i].messages.push({
+        sent: false,
+        text: req.body.message
+    });
+    data.unshift(data.splice(i, 1)[0]);
+    saveData();
+
+    mainWebSocketCliet.send(JSON.stringify({
+        type: "NewIncomingMessage",
+        message: req.body
+    }));
 });
 
 module.exports = router;

@@ -1,0 +1,46 @@
+[
+    {
+        "username": "user3",
+        "profilePicture": "profile_pic.png",
+        "messages": [
+            {
+                "sent": true,
+                "text": "4th message"
+            },
+            {
+                "sent": false,
+                "text": "5th message"
+            },
+            {
+                "sent": false,
+                "text": "6th message"
+            },
+            {
+                "sent": false,
+                "text": "ok ok ok"
+            }
+        ]
+    },
+    {
+        "username": "user1",
+        "profilePicture": "profile_pic.png",
+        "messages": [
+            {
+                "sent": true,
+                "text": "1st message"
+            },
+            {
+                "sent": true,
+                "text": "2nd message"
+            },
+            {
+                "sent": false,
+                "text": "3rd message"
+            },
+            {
+                "sent": false,
+                "text": "asd"
+            }
+        ]
+    }
+]
