@@ -50,29 +50,21 @@ router.post("/sendMessage", function (req, res, next) {
             sender: config.username,
             message: req.body.msg
         });
+    }).then((data) => {
+        addMessage(req.body.receiver, true, req.body.msg);
+        res.sendStatus(200);
     });
 });
 
 router.post("/receiveMessage", function (req, res, next) {
-    if (req.body.sender == config.username) return;
-
-    let i = 0;
-    for (i = 0; i < data.length; i++)
-        if (data[i].username == req.body.sender)
-            break;
-    if (i == data.length) {
-        data.push({
-            username: req.body.sender,
-            messages: []
-        });
+    if (req.body.sender == config.username) {
+        res.sendStatus(200);
+        return;
     }
 
-    data[i].messages.push({
-        sent: false,
-        text: req.body.message
-    });
-    data.unshift(data.splice(i, 1)[0]);
-    saveData();
+    addMessage(req.body.sender, false, req.body.message);
+
+    res.sendStatus(200);
 
     mainWebSocketCliet.send(JSON.stringify({
         type: "NewIncomingMessage",
@@ -81,6 +73,27 @@ router.post("/receiveMessage", function (req, res, next) {
 });
 
 module.exports = router;
+
+
+function addMessage (username, sent, text) {
+    let i = 0;
+    for (i = 0; i < data.length; i++)
+        if (data[i].username == username)
+            break;
+    if (i == data.length) {
+        data.push({
+            username: username,
+            messages: []
+        });
+    }
+
+    data[i].messages.push({
+        sent: sent,
+        text: text
+    });
+    data.unshift(data.splice(i, 1)[0]);
+    saveData();
+}
 
 
 function httpGETRequest (url) {

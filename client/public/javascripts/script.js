@@ -208,5 +208,7 @@ function sendMessage (toWhom, message) {
             receiver: toWhom,
             msg: message
         })
+    }).then((data) => {
+        allChats.get(toWhom).addMessage(true, message);
     });
 }
