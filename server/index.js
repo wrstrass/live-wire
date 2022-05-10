@@ -12,9 +12,13 @@ const config = require("./config.json");
 const host = config.host;
 const port = config.port;
 
+const indexHTMLFile = fs.readFileSync("./index.html");
+
 const requestEmitter = new EventEmitter();
 requestEmitter.on("GET/", (req, res, url) => {
-    res.end("Live Wire Server");
+    res.setHeader("Content-Type", "text/html");
+    res.writeHead(200);
+    res.end(indexHTMLFile);
 });
 requestEmitter.on("GET/register", (req, res, url) => {
     if (users[url.searchParams.get("username")] == url.searchParams.get("password")) {
@@ -26,9 +30,11 @@ requestEmitter.on("GET/register", (req, res, url) => {
         console.log("User " + url.searchParams.get("username") + " was registred");
 
         res.writeHead(200);
+        res.end("OK");
     }
     else {
         res.writeHead(404);
+        res.end("Not Found");
     }
     res.end();
 });

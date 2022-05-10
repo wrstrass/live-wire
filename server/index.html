@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LiveWire Server</title>
+    <script>
+        window.onload = function () {
+            document.getElementById("reg_button").onclick = function () {
+                username = document.getElementById("username").value;
+                password = document.getElementById("password").value;
+                ip = document.getElementById("ip").value;
+
+                window.location.href = "/register?username=" + username + "&password=" + password + "&ip=" + ip;
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>LiveWire Server</h1>
+    <p>Username: <input type="text" id="username"></p>
+    <p>Password: <input type="text" id="password"></p>
+    <p>IP: <input type="text" id="ip"></p>
+    <button id="reg_button">Register</button>
+</body>
+</html>
